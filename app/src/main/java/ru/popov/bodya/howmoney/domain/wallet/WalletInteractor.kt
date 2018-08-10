@@ -1,13 +1,16 @@
 package ru.popov.bodya.howmoney.domain.wallet
 
+import android.util.Log
 import io.reactivex.Completable
 import io.reactivex.Flowable
+import io.reactivex.Single
+import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.toFlowable
 import ru.popov.bodya.howmoney.data.repositories.CurrencyRateRepository
 import ru.popov.bodya.howmoney.data.repositories.TransactionsRepository
 import ru.popov.bodya.howmoney.data.repositories.WalletRepository
+import ru.popov.bodya.howmoney.domain.wallet.models.*
 import ru.popov.bodya.howmoney.domain.wallet.models.Currency
-import ru.popov.bodya.howmoney.domain.wallet.models.Transaction
-import ru.popov.bodya.howmoney.domain.wallet.models.Wallet
 import java.util.*
 
 class WalletInteractor(private val currencyRateRepository: CurrencyRateRepository,
@@ -19,6 +22,14 @@ class WalletInteractor(private val currencyRateRepository: CurrencyRateRepositor
     fun deleteWallet(walletId: Int) = walletRepository.deleteWallet(walletId)
             .andThen(transactionsRepository.deleteAllTransactionsByWalletId(walletId))
 
+    fun deleteTransaction(transaction: Transaction): Completable {
+        return transactionsRepository.deleteTransaction(transaction).andThen {
+            walletRepository.increaseWalletBalance(transaction.walletId, -transaction.amount).subscribe()
+        }
+    }
+
+    fun addTransaction(transaction: Transaction) = transactionsRepository.addTransaction(transaction)
+
     fun getWalletBalance(walletId: Int): Flowable<Double> = walletRepository.getWalletById(walletId).map { it.amount }
 
     fun getMajorCurrencyForWallet(walletId: Int): Flowable<Currency> = walletRepository.getWalletById(walletId).map { it.majorCurrency }
@@ -29,6 +40,10 @@ class WalletInteractor(private val currencyRateRepository: CurrencyRateRepositor
 
     fun getExpenseSumFromAllWalletsByWalletId(walletId: Int): Flowable<Double> = transactionsRepository.getAllExpenseTransactionsSumByWalletId(walletId)
 
+    fun deleteAllTransactions() =
+            transactionsRepository.deleteAllTransactions()
+                    .andThen(walletRepository.clearData())
+
     /*
         Лишний сабскрайб, который я не знаю как задиспоузить
      */
@@ -37,24 +52,19 @@ class WalletInteractor(private val currencyRateRepository: CurrencyRateRepositor
         return transactionsRepository.getAllTransactions()
     }
 
-    fun getAllIncomeTransactions(): Flowable<List<Transaction>>
-            = transactionsRepository.getAllIncomeTransactions()
+    fun getAllTemplates(): Flowable<List<Transaction>> = transactionsRepository.getAllTemplates()
 
-    fun getAllExpenseTransactions(): Flowable<List<Transaction>>
-            = transactionsRepository.getAllExpenseTransactions()
+    fun getAllIncomeTransactions(): Flowable<List<Transaction>> = transactionsRepository.getAllIncomeTransactions()
 
-    fun getAllIncomeTransactionsByWallet(walletId: Int): Flowable<List<Transaction>>
-            = transactionsRepository.getAllIncomeTransactionsByWallet(walletId)
+    fun getAllExpenseTransactions(): Flowable<List<Transaction>> = transactionsRepository.getAllExpenseTransactions()
 
-    fun getAllExpenseTransactionsByWallet(walletId: Int): Flowable<List<Transaction>>
-            = transactionsRepository.getAllExpenseTransactionsByWallet(walletId)
+    fun getAllIncomeTransactionsByWallet(walletId: Int): Flowable<List<Transaction>> = transactionsRepository.getAllIncomeTransactionsByWallet(walletId)
 
-    fun getAllTransactionsByWallet(walletId: Int): Flowable<List<Transaction>>
-            = transactionsRepository.getAllTransactionsByWallet(walletId)
+    fun getAllExpenseTransactionsByWallet(walletId: Int): Flowable<List<Transaction>> = transactionsRepository.getAllExpenseTransactionsByWallet(walletId)
 
-    fun getExchangeRate(fromCurrency: Currency, toCurrency: Currency)
-            = currencyRateRepository.getExchangeRate(fromCurrency, toCurrency)
+    fun getAllTransactionsByWallet(walletId: Int): Flowable<List<Transaction>> = transactionsRepository.getAllTransactionsByWallet(walletId)
 
+    fun getExchangeRate(fromCurrency: Currency, toCurrency: Currency) = currencyRateRepository.getExchangeRate(fromCurrency, toCurrency)
 
     /*
         пока что приложение не поддерживает добавление транзакций в валюте отличной от основной на кошельке
@@ -62,23 +72,31 @@ class WalletInteractor(private val currencyRateRepository: CurrencyRateRepositor
     fun createTransaction(transaction: Transaction): Completable {
         return if (transaction.periodic)
             transactionsRepository.addPeriodicTransaction(transaction)
-        else
-            putTransactionOnWalletWithTheSameCurrency(transaction)
+        else putTransactionOnWalletWithTheSameCurrency(transaction)
+    }
+
+    fun getStatsByWalletId(walletId: Int): Flowable<List<Stats>> {
+        return transactionsRepository.getAllTransactionsByWallet(walletId)
+                .map { it -> mapTransactionsToStats(it) }
     }
 
     private fun putTransactionOnWalletWithTheSameCurrency(transaction: Transaction): Completable {
         return walletRepository.increaseWalletBalance(transaction.walletId, transaction.amount).doOnComplete {
-            transactionsRepository.addTransaction(transaction)
+            transactionsRepository.addTransaction(transaction).subscribe()
         }
     }
 
-    private fun putTransactionOnWalletWithDifferentCurrency(transaction: Transaction): Completable {
+    private fun putTransactionOnWalletWithDifferentCurrency(transaction: Transaction): Flowable<Double> {
         return walletRepository.getWalletById(transaction.walletId)
                 .flatMap { wallet -> currencyRateRepository.getExchangeRate(transaction.currency, wallet.majorCurrency).toFlowable() }
-                .map { rate -> transaction.amount * rate }
-                .flatMapCompletable { inc -> walletRepository.increaseWalletBalance(transaction.walletId, inc) }
-                .andThen { transactionsRepository.addTransaction(transaction) }
+                .map { rate -> rate * transaction.amount }
+                .doOnNext { inc ->
+                    walletRepository.increaseWalletBalance(transaction.walletId, inc)
+                            .andThen { transactionsRepository.addTransaction(transaction) }.subscribe()
+                }
+
     }
+
 
     /*
         Здесь все очень печально -- в плане самого алгоритма вроде норм
@@ -100,5 +118,16 @@ class WalletInteractor(private val currencyRateRepository: CurrencyRateRepositor
                 transactionsRepository.updateTransaction(updatedPeriodicTransaction).subscribe()
             }
         }
+    }
+
+    private fun mapTransactionsToStats(transactions: List<Transaction>): List<Stats> {
+        val stats = mutableListOf<Stats>()
+        transactions.groupBy { it.category }
+                .forEach { category, list ->
+                    stats.add(Stats(category,
+                            list.filter { it.amount > 0 }.sumByDouble { it.amount },
+                            list.filter { it.amount < 0 }.sumByDouble { it.amount }))
+                }
+        return stats
     }
 }
