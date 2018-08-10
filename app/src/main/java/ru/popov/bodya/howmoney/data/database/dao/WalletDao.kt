@@ -2,6 +2,7 @@ package ru.popov.bodya.howmoney.data.database.dao
 
 import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Query
+import android.arch.persistence.room.Transaction
 import io.reactivex.Flowable
 import ru.popov.bodya.howmoney.domain.wallet.models.Wallet
 
@@ -21,4 +22,10 @@ interface WalletDao : BaseDao<Wallet> {
 
     @Query("DELETE FROM wallets WHERE id=:walletId")
     fun deleteWalletById(walletId: Int)
+
+    @Query("DELETE FROM wallets WHERE id!=1")
+    fun deleteAllWallets()
+
+    @Query("UPDATE wallets SET amount=0.0")
+    fun resetAllWallets()
 }

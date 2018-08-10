@@ -14,9 +14,13 @@ class WalletRepository(private val walletDao: WalletDao) {
 
     fun deleteWallet(walletId: Int) = Completable.fromAction { walletDao.deleteWalletById(walletId) }
 
-    fun updateWalletBalance(walletId: Int, newBalance: Double)
-            = Completable.fromAction { walletDao.updateWalletBalance(walletId, newBalance) }
+    fun updateWalletBalance(walletId: Int, newBalance: Double) = Completable.fromAction { walletDao.updateWalletBalance(walletId, newBalance) }
 
-    fun increaseWalletBalance(walletId: Int, inc: Double)
-            = Completable.fromAction { walletDao.increaseWalletBalance(walletId, inc) }
+    fun increaseWalletBalance(walletId: Int, inc: Double) = Completable.fromCallable { walletDao.increaseWalletBalance(walletId, inc) }
+
+    fun clearData() = Completable.fromAction {
+        walletDao.deleteAllWallets()
+        walletDao.resetAllWallets()
+    }
+
 }

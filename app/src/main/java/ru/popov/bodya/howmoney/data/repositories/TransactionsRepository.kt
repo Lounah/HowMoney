@@ -1,58 +1,43 @@
 package ru.popov.bodya.howmoney.data.repositories
 
-import android.util.Log
 import io.reactivex.Completable
 import ru.popov.bodya.howmoney.data.database.dao.TransactionsDao
 import ru.popov.bodya.howmoney.domain.wallet.models.Transaction
 
 class TransactionsRepository(private val transactionsDao: TransactionsDao) {
-    fun addTransaction(transaction: Transaction)
-            = Completable.fromAction { transactionsDao.insert(transaction) }.subscribe()
+    fun addTransaction(transaction: Transaction) = Completable.fromAction { transactionsDao.insert(transaction) }
 
     fun addPeriodicTransaction(transaction: Transaction) = Completable.fromAction { transactionsDao.insert(transaction) }
 
-    fun addTransactions(transactions: List<Transaction>)
-            = Completable.fromAction { transactionsDao.insertAll(transactions) }.subscribe()
+    fun getAllTemplates() = transactionsDao.getAllTemplates()
 
-    fun deleteAllTransactionsByWalletId(walletId: Int)
-            = Completable.fromAction { transactionsDao.deleteAllTransactionsByWalletId(walletId) }
+    fun deleteAllTransactions() = Completable.fromAction { transactionsDao.deleteAllTransactions() }
 
-    fun deleteTransactionById(transactionId: Int)
-            = Completable.fromAction { transactionsDao.deleteTransactionById(transactionId) }.subscribe()
+    fun deleteAllTransactionsByWalletId(walletId: Int) = Completable.fromAction { transactionsDao.deleteAllTransactionsByWalletId(walletId) }
 
-    fun getTransactionById(transactionId: Int)
-            = Completable.fromAction { transactionsDao.getTransactionById(transactionId) }.subscribe()
+    fun deleteTransactionById(transactionId: Int) = Completable.fromAction { transactionsDao.deleteTransactionById(transactionId) }.subscribe()
 
-    fun getAllTransactions()
-            = transactionsDao.getAllTransactions()
+    fun getTransactionById(transactionId: Int) = Completable.fromAction { transactionsDao.getTransactionById(transactionId) }.subscribe()
 
-    fun getAllPeriodicTransactions()
-            = transactionsDao.getAllPeriodicTransactions()
+    fun getAllTransactions() = transactionsDao.getAllTransactions()
 
-    fun getAllIncomeTransactions()
-            = transactionsDao.getAllIncomeTransactions()
+    fun getAllPeriodicTransactions() = transactionsDao.getAllPeriodicTransactions()
 
-    fun getAllIncomeTransactionsSumByWalletId(walletId: Int)
-            = transactionsDao.getAllIncomeTransactionsSumByWalletId(walletId)
+    fun getAllIncomeTransactions() = transactionsDao.getAllIncomeTransactions()
 
-    fun getAllExpenseTransactionsSumByWalletId(walletId: Int)
-            = transactionsDao.getAllExpenseTransactionsSumByWalletId(walletId)
+    fun getAllIncomeTransactionsSumByWalletId(walletId: Int) = transactionsDao.getAllIncomeTransactionsSumByWalletId(walletId)
 
-    fun getAllExpenseTransactions()
-            = transactionsDao.getAllExpenseTransactions()
+    fun getAllExpenseTransactionsSumByWalletId(walletId: Int) = transactionsDao.getAllExpenseTransactionsSumByWalletId(walletId)
 
-    fun getAllTransactionsByWallet(walletId: Int)
-            = transactionsDao.getAllTransactionsByWalletId(walletId)
+    fun getAllExpenseTransactions() = transactionsDao.getAllExpenseTransactions()
 
-    fun getAllIncomeTransactionsByWallet(walletId: Int)
-            = transactionsDao.getAllIncomeTransactionsByWalletId(walletId)
+    fun getAllTransactionsByWallet(walletId: Int) = transactionsDao.getAllTransactionsByWalletId(walletId)
 
-    fun getAllExpenseTransactionsByWallet(walletId: Int)
-            = transactionsDao.getAllExpenseTransactionsByWalletId(walletId)
+    fun getAllIncomeTransactionsByWallet(walletId: Int) = transactionsDao.getAllIncomeTransactionsByWalletId(walletId)
 
-    fun deleteTransaction(transaction: Transaction)
-            = Completable.fromAction { transactionsDao.delete(transaction) }
+    fun getAllExpenseTransactionsByWallet(walletId: Int) = transactionsDao.getAllExpenseTransactionsByWalletId(walletId)
 
-    fun updateTransaction(transaction: Transaction)
-            = Completable.fromAction { transactionsDao.update(transaction) }
+    fun deleteTransaction(transaction: Transaction) = Completable.fromAction { transactionsDao.delete(transaction) }
+
+    fun updateTransaction(transaction: Transaction) = Completable.fromAction { transactionsDao.update(transaction) }
 }
