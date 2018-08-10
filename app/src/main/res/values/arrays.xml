@@ -16,6 +16,10 @@
         <item>@string/eur</item>
     </string-array>
 
+    <string-array name="transaction_options">
+        <item>@string/delete</item>
+    </string-array>
+
     <string-array name="wallets">
         <item>@string/cash</item>
         <item>@string/bank_account</item>

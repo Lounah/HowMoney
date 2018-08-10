@@ -11,6 +11,7 @@
     <string name="currency_rub">RUB</string>
     <string name="dollar_sign">$</string>
     <string name="euro_sign">€</string>
+    <string name="rubble_sign">₽</string>
     <string name="dash">-</string>
     <string name="rub">RUB</string>
     <string name="usd">USD</string>
@@ -19,8 +20,16 @@
     <string name="all_transactions">Все транзакции</string>
     <string name="incomes">Доходы</string>
     <string name="expenses">Расходы</string>
+    <string name="income">Доход</string>
+    <string name="expense">Расход</string>
     <string name="last_update_time">Обновлено: </string>
     <string name="settings_username">Пользователь</string>
+    <string name="developer_sign">© 2018 #Lounah</string>
+    <string name="system_prefs">Cистемные настройки</string>
+    <string name="success_deletion_result">Данные успешно удалены</string>
+    <string name="add_wallet">Новый кошелек</string>
+    <string name="wallet_successfully_created">Кошелек успешно создан!</string>
+    <string name="please_fill_all_fields">Пожалуйста,заполните все поля</string>
 
     <!--Wallet screen-->
     <string name="savings">Сбережения</string>
@@ -39,6 +48,10 @@
     <string name="statistics">Статистика</string>
     <string name="new_income">Новый доход</string>
     <string name="new_expense">Новый расход</string>
+    <string name="create_wallet">Новый кошелек</string>
+    <string name="wallet_name">Название кошелька</string>
+    <string name="wallet_type">Тип кошелька</string>
+    <string name="delete">Удалить</string>
 
     <!--Settings screen-->
     <string name="action_settings">Settings</string>
@@ -46,6 +59,9 @@
     <string name="confidentiality_policy">Политика конфиденциальности</string>
     <string name="notifications">Уведомления</string>
     <string name="about_application">О приложении</string>
+    <string name="clear_data">Очистить все данные</string>
+    <string name="help">Помощь</string>
+    <string name="contact_support">Написать в поддержку</string>
     <string name="other_settings">Другие настройки</string>
     <string name="major_currency">Основная валюта</string>
     <string name="version_code">Версия приложения: %1$s</string>
@@ -76,9 +92,17 @@
     <string name="transaction_commentary">Комментарий к транзакции</string>
     <string name="please_type_here_short_comment">Короткий комментарий</string>
     <string name="create">Создать</string>
+    <string name="transaction">Транзакция</string>
+    <string name="draft">Шаблон</string>
+    <string name="create_draft">Создать шаблон</string>
+    <string name="from_template">Из шаблона</string>
+    <string name="create_transaction_error">Пожалуйста, выберете кошелек/категорию</string>
+    <string name="save_as_draft">Создать как шаблон</string>
 
 
     <!--Stats screen-->
+    <string name="stats_by_category">Статистика по категориям</string>
+    <string name="diagram">Диаграма</string>
 
     <!--About screen-->
     <string name="about_version_template">0.1</string>

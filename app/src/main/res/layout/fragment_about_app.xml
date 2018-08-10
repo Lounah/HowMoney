@@ -10,7 +10,7 @@
         android:layout_height="190dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="36dp"
-        app:srcCompat="@drawable/ic_wallet_24dp" />
+        app:srcCompat="@drawable/ic_app_icon" />
 
     <TextView
         android:id="@+id/tv_app_title"
@@ -41,6 +41,7 @@
         android:layout_alignParentBottom="true"
         android:layout_margin="16dp"
         android:layout_marginBottom="0dp"
+        android:text="@string/developer_sign"
         android:textAlignment="center"
         android:textColor="@color/greyDark" />
 </RelativeLayout>

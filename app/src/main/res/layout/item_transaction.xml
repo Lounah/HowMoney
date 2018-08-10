@@ -83,6 +83,7 @@
         app:symbolMargin="8dp"
         app:symbolTextColor="@color/grey"
         app:symbolTextSize="0sp" />
+
     <TextView
         android:id="@+id/tv_description"
         android:layout_width="0dp"
