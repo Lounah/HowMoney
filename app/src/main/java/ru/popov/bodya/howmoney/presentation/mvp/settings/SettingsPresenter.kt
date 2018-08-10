@@ -6,6 +6,7 @@ import ru.popov.bodya.core.extensions.connect
 import ru.popov.bodya.core.mvp.AppPresenter
 import ru.popov.bodya.core.rx.RxSchedulersTransformer
 import ru.popov.bodya.howmoney.data.database.preferences.SharedPreferencesWrapper
+import ru.popov.bodya.howmoney.domain.wallet.WalletInteractor
 import ru.popov.bodya.howmoney.presentation.ui.common.Screens
 import ru.terrakok.cicerone.Router
 import javax.inject.Inject
@@ -13,6 +14,7 @@ import javax.inject.Inject
 @InjectViewState
 class SettingsPresenter @Inject constructor(
         private val sharedPrefsWrapper: SharedPreferencesWrapper,
+        private val walletInteractor: WalletInteractor,
         private val rxSchedulersTransformer: RxSchedulersTransformer,
         private val router: Router
 ) : AppPresenter<SettingsView>() {
@@ -22,6 +24,14 @@ class SettingsPresenter @Inject constructor(
         Single.just(sharedPrefsWrapper.getFavExchangeRate())
                 .compose(rxSchedulersTransformer.ioToMainTransformerSingle())
                 .subscribe(viewState::showFavCurrency)
+                .connect(compositeDisposable)
+    }
+
+
+    fun clearData() {
+        walletInteractor.deleteAllTransactions()
+                .compose(rxSchedulersTransformer.ioToMainTransformerCompletable())
+                .subscribe(viewState::showSuccessDeletionResult)
                 .connect(compositeDisposable)
     }
 
