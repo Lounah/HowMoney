@@ -8,6 +8,7 @@ import ru.popov.bodya.howmoney.presentation.ui.addtransaction.AddOperationFragme
 import ru.popov.bodya.howmoney.presentation.ui.addtransaction.AddTransactionFragment
 import ru.popov.bodya.howmoney.presentation.ui.addtransaction.addtemplate.AddTemplateFragment
 import ru.popov.bodya.howmoney.presentation.ui.addwallet.AddWalletFragment
+import ru.popov.bodya.howmoney.presentation.ui.pendings.PendingTransactionsFragment
 import ru.popov.bodya.howmoney.presentation.ui.settings.fragments.SettingsFragment
 import ru.popov.bodya.howmoney.presentation.ui.stats.StatsFragment
 import ru.popov.bodya.howmoney.presentation.ui.wallet.WalletFragment
@@ -33,7 +34,10 @@ interface AccountFragmentsInjectorBuilders {
     fun provideAddWalletFragment(): AddWalletFragment
 
     @ContributesAndroidInjector
-    fun provideAddOperationFragment() : AddOperationFragment
+    fun provideAddOperationFragment(): AddOperationFragment
+
+    @ContributesAndroidInjector
+    fun providePeriodicTransactionsFragment(): PendingTransactionsFragment
 
     @ContributesAndroidInjector
     fun provideAddTemplateFragment(): AddTemplateFragment

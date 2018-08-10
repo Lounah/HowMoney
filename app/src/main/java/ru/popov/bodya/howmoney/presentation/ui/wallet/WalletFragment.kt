@@ -65,9 +65,11 @@ class WalletFragment : BaseFragment(), WalletView,
 
     override fun showWallets(wallets: List<Wallet>) {
         accountWallets = wallets
-        walletPresenter.fetchTransactionsSumByWalletId(wallets[vp_amount.currentItem].id)
-        walletPresenter.exchangeBalance(accountWallets[vp_amount.currentItem].majorCurrency, accountWallets[vp_amount.currentItem].amount)
-        pagerAdapter.updateDataSet(wallets)
+        if (wallets.isNotEmpty()) {
+            walletPresenter.fetchTransactionsSumByWalletId(wallets[vp_amount.currentItem].id)
+            walletPresenter.exchangeBalance(accountWallets[vp_amount.currentItem].majorCurrency, accountWallets[vp_amount.currentItem].amount)
+            pagerAdapter.updateDataSet(wallets)
+        } else walletPresenter.fetchAllWallets()
     }
 
     override fun showTransactions(transactions: List<Transaction>) {

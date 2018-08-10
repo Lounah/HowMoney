@@ -104,6 +104,9 @@
     <string name="stats_by_category">Статистика по категориям</string>
     <string name="diagram">Диаграма</string>
 
+    <!--PendingTransactions-->
+    <string name="pending_transactions">Периодические транзакции</string>
+
     <!--About screen-->
     <string name="about_version_template">0.1</string>
     <string name="about_logo_image_content_desc">Логотип приложения</string>

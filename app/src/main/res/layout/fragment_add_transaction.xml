@@ -182,8 +182,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:weightSum="2"
-            app:layout_constraintTop_toBottomOf="@+id/et_comment_on_transaction">
+            app:layout_constraintTop_toBottomOf="@id/switch_is_template">
 
             <Button
                 android:id="@+id/btn_create_as_transaction"
@@ -194,18 +195,8 @@
                 android:layout_marginBottom="16dp"
                 android:layout_marginTop="24dp"
                 android:layout_weight="1"
-                android:text="@string/create" />
-
-            <Button
-                android:id="@+id/btn_create_as_template"
-                style="@android:style/Widget.Material.Button.Borderless.Colored"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="@dimen/app_margin"
-                android:layout_marginBottom="16dp"
-                android:layout_marginTop="24dp"
-                android:layout_weight="1"
-                android:text="@string/create_draft" />
+                android:text="@string/create"
+                app:layout_constraintTop_toBottomOf="@+id/switch1" />
 
         </LinearLayout>
 
@@ -215,6 +206,19 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintGuide_begin="416dp" />
+
+        <Switch
+            android:id="@+id/switch_is_template"
+            style="@style/TextStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/save_as_draft"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/et_comment_on_transaction" />
 
 
     </android.support.constraint.ConstraintLayout>

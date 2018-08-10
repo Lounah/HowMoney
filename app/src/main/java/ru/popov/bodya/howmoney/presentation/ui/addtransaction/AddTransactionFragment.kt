@@ -111,40 +111,22 @@ class AddTransactionFragment : BaseFragment(), AddTransactionView {
     private fun initCreateTransactionButton() {
         btn_create_as_transaction.setOnClickListener {
             comment = et_comment_on_transaction.text.toString()
-
             if (!::selectedWallet.isInitialized
                     || et_transaction_sum.text == null || et_transaction_sum.text.toString().isEmpty()) {
                 Toast.makeText(context!!, R.string.create_transaction_error, Toast.LENGTH_SHORT).show()
             } else {
                 amount = et_transaction_sum.text.toString().toDouble()
+                isTemplate = switch_is_template.isChecked
                 if (!isIncome)
                     amount = -amount
                 val transaction = Transaction(date = date,
                         comment = comment, walletId = selectedWallet.id,
                         category = selectedCategory,
                         amount = amount, currency = selectedWallet.majorCurrency, periodic = isPeriodic,
-                        template = false, period = period)
+                        template = isTemplate, period = period)
                 addTransactionPresenter.createTransaction(transaction)
             }
         }
-
-        btn_create_as_template.setOnClickListener {
-            comment = et_comment_on_transaction.text.toString()
-            if (!::selectedWallet.isInitialized || et_transaction_sum.text.toString().isEmpty()) {
-                Toast.makeText(context!!, R.string.create_transaction_error, Toast.LENGTH_SHORT).show()
-            } else {
-                amount = et_transaction_sum.text.toString().toDouble()
-                if (!isIncome)
-                    amount = -amount
-                val transaction = Transaction(date = date,
-                        comment = comment, walletId = selectedWallet.id,
-                        category = selectedCategory,
-                        amount = amount, currency = selectedWallet.majorCurrency, periodic = isPeriodic,
-                        template = true, period = period)
-                addTransactionPresenter.createTemplate(transaction)
-            }
-        }
-
     }
 
     private fun initRadioGroups() {

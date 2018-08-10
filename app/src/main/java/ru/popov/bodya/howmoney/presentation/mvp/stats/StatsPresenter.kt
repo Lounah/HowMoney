@@ -32,7 +32,7 @@ class StatsPresenter @Inject constructor(
     fun fetchStats(walletId: Int) {
         walletInteractor.getStatsByWalletId(walletId)
                 .compose(rxSchedulersTransformer.ioToMainTransformerFlowable())
-                .subscribe(viewState::showStatsByCategory)
+                .subscribe(viewState::showStatsByCategory, { e -> })
                 .connect(compositeDisposable)
     }
 

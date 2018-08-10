@@ -36,6 +36,8 @@ import ru.popov.bodya.howmoney.presentation.ui.settings.fragments.SettingsFragme
 import ru.popov.bodya.howmoney.presentation.ui.stats.StatsFragment
 import ru.popov.bodya.howmoney.presentation.ui.wallet.WalletFragment
 import ru.popov.bodya.howmoney.presentation.ui.addwallet.AddWalletFragment
+import ru.popov.bodya.howmoney.presentation.ui.common.Screens.PERIODIC_SCREEN
+import ru.popov.bodya.howmoney.presentation.ui.pendings.PendingTransactionsFragment
 import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.android.SupportAppNavigator
 import javax.inject.Inject
@@ -110,6 +112,10 @@ class AccountActivity : AppActivity(), AccountView,
             R.id.nav_stats -> {
                 nav_view.setCheckedItem(R.id.nav_stats)
                 accountPresenter.navigateToStatsScreen()
+            }
+            R.id.nav_periodic -> {
+                nav_view.setCheckedItem(R.id.nav_periodic)
+                accountPresenter.navigateToPeriodicTransactionsScreen()
             }
         }
         drawer_layout.closeDrawer(GravityCompat.START)
@@ -192,6 +198,7 @@ class AccountActivity : AppActivity(), AccountView,
                 NEW_TRANSACTION_SCREEN -> AddOperationFragment()
                 SETTINGS_SCREEN -> SettingsFragment()
                 ABOUT_SCREEN -> AboutFragment()
+                PERIODIC_SCREEN -> PendingTransactionsFragment()
                 else -> null
             }
         }

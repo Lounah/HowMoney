@@ -24,9 +24,12 @@ class WalletInteractor(private val currencyRateRepository: CurrencyRateRepositor
 
     fun deleteTransaction(transaction: Transaction): Completable {
         return transactionsRepository.deleteTransaction(transaction).andThen {
-            walletRepository.increaseWalletBalance(transaction.walletId, -transaction.amount).subscribe()
+            if (!transaction.periodic)
+                walletRepository.increaseWalletBalance(transaction.walletId, -transaction.amount).subscribe()
         }
     }
+
+    fun getAllPeriodicTransactions() = transactionsRepository.getAllPeriodicTransactions()
 
     fun addTransaction(transaction: Transaction) = transactionsRepository.addTransaction(transaction)
 
@@ -71,7 +74,7 @@ class WalletInteractor(private val currencyRateRepository: CurrencyRateRepositor
      */
     fun createTransaction(transaction: Transaction): Completable {
         return if (transaction.periodic)
-            transactionsRepository.addPeriodicTransaction(transaction)
+            transactionsRepository.addPeriodicTransaction(transaction).andThen { putTransactionOnWalletWithTheSameCurrency(transaction.copy(id = 0, periodic = false)).subscribe() }
         else putTransactionOnWalletWithTheSameCurrency(transaction)
     }
 

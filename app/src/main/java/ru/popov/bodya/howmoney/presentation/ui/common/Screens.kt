@@ -8,5 +8,6 @@ object Screens {
     const val NEW_TRANSACTION_SCREEN = "new transaction screen"
     const val STATS_SCREEN = "stats screen"
     const val SETTINGS_SCREEN = "settings screen"
+    const val PERIODIC_SCREEN = "periodic screen"
     const val ABOUT_SCREEN = "about screen"
 }

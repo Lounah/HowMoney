@@ -24,12 +24,16 @@ class AccountPresenter @Inject constructor(
         navigateToWalletScreen()
     }
 
+    fun navigateToPeriodicTransactionsScreen() {
+        router.navigateTo(Screens.PERIODIC_SCREEN)
+    }
+
     fun navigateToSettingsScreen() {
         router.newScreenChain(Screens.SETTINGS_SCREEN)
     }
 
     fun navigateToStatsScreen() {
-        router.newScreenChain(Screens.STATS_SCREEN)
+        router.navigateTo(Screens.STATS_SCREEN)
     }
 
     fun navigateToWalletScreen() {

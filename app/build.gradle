@@ -108,6 +108,8 @@ dependencies {
     testImplementation libraries.mockito
     testImplementation libraries.robolectric
 
+    implementation 'com.android.support:multidex:1.0.3'
+
     androidTestImplementation libraries.androidTestRunner
     androidTestImplementation libraries.espressoCore
     androidTestImplementation libraries.espressoContrib
