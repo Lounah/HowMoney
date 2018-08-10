@@ -4,29 +4,31 @@ package ru.popov.bodya.howmoney.presentation.ui.wallet
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
+import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import dagger.android.support.AndroidSupportInjection
+import kotlinx.android.synthetic.main.fragment_add_transaction.*
 import kotlinx.android.synthetic.main.fragment_wallet.*
 import ru.popov.bodya.howmoney.R
+import ru.popov.bodya.howmoney.domain.wallet.models.Currency
 import ru.popov.bodya.howmoney.domain.wallet.models.Transaction
+import ru.popov.bodya.howmoney.domain.wallet.models.Type
 import ru.popov.bodya.howmoney.domain.wallet.models.Wallet
 import ru.popov.bodya.howmoney.presentation.mvp.wallet.WalletPresenter
 import ru.popov.bodya.howmoney.presentation.mvp.wallet.WalletView
 import ru.popov.bodya.howmoney.presentation.ui.account.activities.AccountActivity
 import ru.popov.bodya.howmoney.presentation.ui.common.BaseFragment
 import ru.popov.bodya.howmoney.presentation.ui.common.Screens
-import ru.popov.bodya.howmoney.presentation.util.ZoomOutPageTransformer
+import ru.popov.bodya.howmoney.presentation.util.view.ZoomOutPageTransformer
 import java.text.DecimalFormat
 import javax.inject.Inject
 
-class WalletFragment : BaseFragment(), WalletView {
+class WalletFragment : BaseFragment(), WalletView,
+        OptionsDialogFragment.OnClickListener {
 
     private companion object {
         const val SELECTED_TAB_KEY = "SELECTED_TAB_KEY"
@@ -38,8 +40,6 @@ class WalletFragment : BaseFragment(), WalletView {
         get() = R.layout.fragment_wallet
     override val toolbarTitleId: Int
         get() = R.string.wallet
-
-    private val formatter = DecimalFormat("#0.00")
 
     private lateinit var accountWallets: List<Wallet>
 
@@ -65,23 +65,13 @@ class WalletFragment : BaseFragment(), WalletView {
 
     override fun showWallets(wallets: List<Wallet>) {
         accountWallets = wallets
-        if (wallets.isNotEmpty())
-            walletPresenter.fetchTransactionsSumByWalletId(wallets[vp_amount.currentItem].id)
+        walletPresenter.fetchTransactionsSumByWalletId(wallets[vp_amount.currentItem].id)
+        walletPresenter.exchangeBalance(accountWallets[vp_amount.currentItem].majorCurrency, accountWallets[vp_amount.currentItem].amount)
         pagerAdapter.updateDataSet(wallets)
     }
 
     override fun showTransactions(transactions: List<Transaction>) {
         transactionsAdapter.updateDataSet(transactions)
-    }
-
-    override fun showFirstFavExchangeRate(rate: Double) {
-        currency_top_exchange_rate.text = formatter.format(rate)
-        setShouldShowCurrencySpinner(false)
-    }
-
-    override fun showSecondFavExchangeRate(rate: Double) {
-        currency_bottom_exchange_rate.text = formatter.format(rate)
-        setShouldShowCurrencySpinner(false)
     }
 
     override fun showSumOfAllIncomeTransactions(sum: Double) {
@@ -98,30 +88,24 @@ class WalletFragment : BaseFragment(), WalletView {
 
     private fun initUI() {
         initFab()
-        initCurrenciesRadioGroup()
         initTransactionsList()
         initWalletViewPager()
     }
 
     private fun initFab() {
-        fab_new_income.setOnClickListener { addNewIncome() }
-        fab_new_expense.setOnClickListener { addNewExpense() }
+        fab_add.setOnClickListener { walletPresenter.onFabAddClicked() }
     }
 
-    private fun addNewIncome() {
-        walletPresenter.onAddNewIncomeTransactionFabClick()
+    override fun showExchangedToUsdBalance(balance: Double) {
+        tv_usd_amount.amount = balance.toFloat()
     }
 
-    private fun addNewExpense() {
-        walletPresenter.onAddNewExpenseTransactionFabClick()
+    override fun showExchangedToEurBalance(balance: Double) {
+        tv_eur_amount.amount = balance.toFloat()
     }
 
-    private fun initCurrenciesRadioGroup() {
-        rg_currencies.check(R.id.btn_rub)
-        rg_currencies.setOnCheckedChangeListener { _, checkedId ->
-            when (checkedId) { // TODO: CONVERT CURRENT AMOUNT TO NEW CURRENCY}
-            }
-        }
+    override fun onDeleteTransactionClicked(transaction: Transaction) {
+        walletPresenter.deleteTransaction(transaction)
     }
 
     private fun initWalletViewPager() {
@@ -131,13 +115,19 @@ class WalletFragment : BaseFragment(), WalletView {
         tl_dots.setupWithViewPager(vp_amount, true)
         vp_amount.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
             override fun onPageSelected(position: Int) {
-                walletPresenter.fetchTransactionsSumByWalletId(accountWallets[position].id)
+                walletPresenter.onWalletChanged(accountWallets[position].id)
+                walletPresenter.exchangeBalance(accountWallets[position].majorCurrency, accountWallets[position].amount)
             }
         })
     }
 
     private fun initTransactionsList() {
-        transactionsAdapter = TransactionsRVAdapter()
+        transactionsAdapter = TransactionsRVAdapter(object : TransactionsRVAdapter.OnLongClickCallback {
+            override fun onLongClicked(item: Transaction) {
+                showDialogFrag(item)
+            }
+        })
+        rv_transactions.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
         rv_transactions.adapter = transactionsAdapter
         val linearLayoutManager = LinearLayoutManager(context)
         rv_transactions.layoutManager = linearLayoutManager
@@ -153,38 +143,10 @@ class WalletFragment : BaseFragment(), WalletView {
                 }
             }
         })
-
-        rv_transactions.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
-                if (dy > 20 && fab_add.visibility == View.VISIBLE) {
-                    hideFab()
-                }
-                if (dy < -20 && fab_add.visibility != View.VISIBLE) {
-                    showFab()
-                }
-            }
-        })
     }
 
-    private fun hideFab() {
-        fab_add.collapse()
-        fab_add.visibility = View.GONE
-    }
-
-    private fun showFab() {
-        fab_add.visibility = View.VISIBLE
-    }
-
-    private fun setShouldShowCurrencySpinner(value: Boolean) {
-        when (value) {
-            true -> {
-                pb_placeholder.visibility = View.VISIBLE
-                progressBar.visibility = View.VISIBLE
-            }
-            false -> {
-                pb_placeholder.visibility = View.GONE
-                progressBar.visibility = View.GONE
-            }
-        }
+    private fun showDialogFrag(transaction: Transaction) {
+        val optionsDialog = OptionsDialogFragment.newInstance(transaction)
+        optionsDialog.show(childFragmentManager, TAG)
     }
 }

@@ -26,11 +26,16 @@ class WalletVPAdapter : PagerAdapter() {
         val itemView = mLayoutInflater
                 .inflate(R.layout.item_balance, container, false)
 
-        itemView.tv_wallet_type.text = when (amount[position].type) {
-            Type.DEBIT_CARD -> itemView.resources.getString(R.string.credit_card)
-            Type.BANK_ACCOUNT -> itemView.resources.getString(R.string.bank_account)
-            Type.CASH -> itemView.resources.getString(R.string.wallet)
+        itemView.tv_wallet_type.text = amount[position].name
+
+        val drawableRight = when (amount[position].type) {
+            Type.CASH -> itemView.resources.getDrawable(R.drawable.ic_cash_white)
+            Type.BANK_ACCOUNT -> itemView.resources.getDrawable(R.drawable.ic_bank_white)
+            Type.DEBIT_CARD -> itemView.resources.getDrawable(R.drawable.ic_credit_card_white)
         }
+
+        itemView.iv_wallet_type.setImageDrawable(drawableRight)
+
         itemView.tv_balance.setSymbol(amount[position].majorCurrency.toString())
         itemView.tv_balance.amount = amount[position].amount.toFloat()
 

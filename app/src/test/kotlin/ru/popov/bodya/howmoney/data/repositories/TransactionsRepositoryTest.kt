@@ -28,7 +28,7 @@ class TransactionsRepositoryTest {
 
     @Test
     fun transaction_add() {
-        transactionsRepository.addTransaction(transactionForTesting)
+        transactionsRepository.addTransaction(transactionForTesting).test()
 
         verify(transactionsDao).insert(transactionForTesting)
         verifyNoMoreInteractions(transactionsDao)
@@ -108,15 +108,33 @@ class TransactionsRepositoryTest {
 
     @Test
     fun transaction_deletes() {
-        transactionsRepository.deleteTransaction(transactionForTesting)
+        transactionsRepository.deleteTransaction(transactionForTesting).test()
 
         verify(transactionsDao).delete(transactionForTesting)
         verifyNoMoreInteractions(transactionsDao)
     }
 
     @Test
+    fun transaction_deletesById() {
+        transactionsRepository.deleteTransactionById(transactionForTesting.id)
+
+        verify(transactionsDao).deleteTransactionById(transactionForTesting.id)
+        verifyNoMoreInteractions(transactionsDao)
+    }
+
+    @Test
+    fun transaction_getsById() {
+        `when`(transactionsDao.getTransactionById(transactionForTesting.id)).thenReturn(Flowable.just(transactionForTesting))
+
+        transactionsRepository.getTransactionById(transactionForTesting.id)
+
+        verify(transactionsDao).getTransactionById(transactionForTesting.id)
+        verifyNoMoreInteractions(transactionsDao)
+    }
+
+    @Test
     fun transaction_updates() {
-        transactionsRepository.updateTransaction(transactionForTesting)
+        transactionsRepository.updateTransaction(transactionForTesting).test()
 
         verify(transactionsDao).update(transactionForTesting)
         verifyNoMoreInteractions(transactionsDao)

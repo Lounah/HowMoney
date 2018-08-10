@@ -26,6 +26,7 @@ android {
     buildTypes {
         debug {
             minifyEnabled false
+            testCoverageEnabled true
         }
         release {
             shrinkResources true
@@ -46,6 +47,10 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    androidExtensions {
+        experimental = true
     }
 }
 
@@ -95,6 +100,7 @@ dependencies {
     implementation 'com.github.aakira:expandable-layout:1.6.0@aar'
     implementation 'info.hoang8f:android-segmented:1.0.6'
     implementation 'com.getbase:floatingactionbutton:1.10.1'
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
     implementation 'com.appyvet:materialrangebar:1.4.3'
     // test
     testImplementation libraries.junit

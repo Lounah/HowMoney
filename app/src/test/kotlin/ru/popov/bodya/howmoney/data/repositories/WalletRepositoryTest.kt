@@ -86,6 +86,15 @@ class WalletRepositoryTest {
     }
 
     @Test
+    fun wallets_clearsAllData() {
+        walletRepository.clearData().test().assertComplete()
+
+        verify(walletDao).deleteAllWallets()
+        verify(walletDao).resetAllWallets()
+        verifyNoMoreInteractions(walletDao)
+    }
+
+    @Test
     fun walletBalance_increases() {
         val walletId = 0
         val inc = 1.0

@@ -38,7 +38,7 @@ class ResourcesSelector private constructor() {
         }
 
         fun fromWalletTypeToDrawable(type: Type) = when (type) {
-            Type.CASH -> R.drawable.ic_cash
+            Type.CASH -> R.drawable.ic_wallet
             Type.DEBIT_CARD -> R.drawable.ic_credit_card
             Type.BANK_ACCOUNT -> R.drawable.ic_bank
         }

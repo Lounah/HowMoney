@@ -1,4 +1,4 @@
-package ru.popov.bodya.howmoney.presentation.mvp.addtransaction
+package ru.popov.bodya.howmoney.presentation.mvp.addtemplate
 
 import com.arellomobile.mvp.InjectViewState
 import ru.popov.bodya.core.extensions.connect
@@ -10,36 +10,24 @@ import ru.terrakok.cicerone.Router
 import javax.inject.Inject
 
 @InjectViewState
-class AddTransactionPresenter @Inject constructor(
+class AddTemplatePresenter @Inject constructor(
         private val walletInteractor: WalletInteractor,
         private val rxSchedulersTransformer: RxSchedulersTransformer,
         private val router: Router
-) : AppPresenter<AddTransactionView>() {
+) : AppPresenter<AddTemplateView>() {
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
-        walletInteractor.getAllWallets()
+        walletInteractor.getAllTemplates()
                 .compose(rxSchedulersTransformer.ioToMainTransformerFlowable())
-                .subscribe(viewState::showWallets)
+                .subscribe(viewState::showTemplates)
                 .connect(compositeDisposable)
     }
 
     fun createTemplate(template: Transaction) {
-        walletInteractor.addTransaction(template)
-                .compose(rxSchedulersTransformer.ioToMainTransformerCompletable())
-                .subscribe()
-                .connect(compositeDisposable)
-
         walletInteractor.createTransaction(template.copy(id = 0, template = false))
                 .compose(rxSchedulersTransformer.ioToMainTransformerCompletable())
-                .subscribe(viewState::onTransactionCreated)
-                .connect(compositeDisposable)
-    }
-
-    fun createTransaction(transaction: Transaction) {
-        walletInteractor.createTransaction(transaction)
-                .compose(rxSchedulersTransformer.ioToMainTransformerCompletable())
-                .subscribe(viewState::onTransactionCreated)
+                .subscribe(viewState::onTemplateCreated)
                 .connect(compositeDisposable)
     }
 

@@ -1,4 +1,4 @@
-package ru.popov.bodya.howmoney.presentation.ui.addtransaction
+package ru.popov.bodya.howmoney.presentation.ui.addtransaction.adapters
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import ru.popov.bodya.howmoney.R
 import ru.popov.bodya.howmoney.domain.wallet.models.Wallet
+import ru.popov.bodya.howmoney.presentation.ui.addtransaction.AddTransactionFragment
 import ru.popov.bodya.howmoney.presentation.util.ResourcesSelector
 
 class WalletsRvAdapter(private val callback: AddTransactionFragment.OnWalletSelectedCallback)
@@ -15,7 +16,7 @@ class WalletsRvAdapter(private val callback: AddTransactionFragment.OnWalletSele
 
     private val wallets = mutableListOf<Wallet>()
 
-    private var selectedIndex = 0
+    private var selectedIndex = -1
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_wallet_type,
@@ -43,10 +44,10 @@ class WalletsRvAdapter(private val callback: AddTransactionFragment.OnWalletSele
         fun bind(item: Wallet, position: Int) = with(itemView) {
 
             val iconImageResource = ResourcesSelector.fromWalletTypeToDrawable(item.type)
-            walletName.text = ResourcesSelector.fromWalletTypeToString(item.type, itemView)
+            walletName.text = item.name
             walletIcon.setImageResource(iconImageResource)
 
-            if (position == selectedIndex)
+            if (position == selectedIndex && selectedIndex != -1)
                 itemView.setBackgroundColor(resources.getColor(R.color.greyWarm)) else
                 itemView.setBackgroundColor(resources.getColor(android.R.color.transparent))
 

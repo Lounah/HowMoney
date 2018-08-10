@@ -1,6 +1,7 @@
-package ru.popov.bodya.howmoney.presentation.ui.addtransaction
+package ru.popov.bodya.howmoney.presentation.ui.addtransaction.adapters
 
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import ru.popov.bodya.howmoney.R
 import ru.popov.bodya.howmoney.domain.wallet.models.Category
+import ru.popov.bodya.howmoney.presentation.ui.addtransaction.AddTransactionFragment
 import ru.popov.bodya.howmoney.presentation.util.ResourcesSelector
 
 
@@ -19,7 +21,7 @@ class CategoriesRVAdapter(private val callback: AddTransactionFragment.OnCategor
             Category.CLOTHES, Category.COMMUNAL_PAYMENTS, Category.FOOD,
             Category.SALARY, Category.FAMILY, Category.OTHER)
 
-    private var selectedIndex = 0
+    private var selectedIndex = 10
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_transaction_category,
