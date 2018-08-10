@@ -1,27 +1,24 @@
 package ru.popov.bodya.howmoney.presentation.ui.addtransaction
 
 import android.os.Bundle
-import android.view.LayoutInflater
+import android.util.Log
 import android.view.View
-import android.view.ViewGroup
-import android.widget.SeekBar
+import android.widget.Toast
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import com.jakewharton.rxbinding2.widget.RxTextView
 import dagger.android.support.AndroidSupportInjection
-import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
-import io.reactivex.functions.BiFunction
 import kotlinx.android.synthetic.main.fragment_add_transaction.*
-import ru.popov.bodya.core.mvp.AppFragment
 import ru.popov.bodya.howmoney.R
 import ru.popov.bodya.howmoney.domain.wallet.models.*
 import ru.popov.bodya.howmoney.domain.wallet.models.Currency
 import ru.popov.bodya.howmoney.presentation.mvp.addtransaction.AddTransactionPresenter
 import ru.popov.bodya.howmoney.presentation.mvp.addtransaction.AddTransactionView
 import ru.popov.bodya.howmoney.presentation.ui.account.activities.AccountActivity
+import ru.popov.bodya.howmoney.presentation.ui.addtransaction.adapters.CategoriesRVAdapter
+import ru.popov.bodya.howmoney.presentation.ui.addtransaction.adapters.WalletsRvAdapter
 import ru.popov.bodya.howmoney.presentation.ui.common.BaseFragment
-import java.util.*
+import java.util.Date
 import javax.inject.Inject
 
 class AddTransactionFragment : BaseFragment(), AddTransactionView {
@@ -34,27 +31,22 @@ class AddTransactionFragment : BaseFragment(), AddTransactionView {
 
     companion object {
         private const val MS_IN_DAY: Long = 86400000
-        const val INCOME_KEY = "IS_INCOME"
-        fun newInstance(isIncome: Boolean) = AddTransactionFragment().apply {
-            val args = Bundle()
-            args.putBoolean(INCOME_KEY, isIncome)
-            arguments = args
-        }
     }
 
     private lateinit var categoriesAdapter: CategoriesRVAdapter
     private lateinit var walletsAdapter: WalletsRvAdapter
-    private lateinit var inputDisposable: Disposable
 
+    private var selectedPeriodId = -1
     private lateinit var selectedWallet: Wallet
-    private lateinit var selectedCurrency: Currency
-    private lateinit var selectedCategory: Category
+    private var selectedCurrency = Currency.RUB
+    private var selectedCategory = Category.OTHER
     private lateinit var comment: String
     private var isPeriodic = false
     private var period: Long = 0
     private val date = Date()
     private var amount: Double = 0.0
     private var isIncome = false
+    private var isTemplate = false
 
     @Inject
     @InjectPresenter
@@ -66,7 +58,6 @@ class AddTransactionFragment : BaseFragment(), AddTransactionView {
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidSupportInjection.inject(this)
         super.onCreate(savedInstanceState)
-        isIncome = arguments?.getBoolean(INCOME_KEY)!!
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -87,43 +78,16 @@ class AddTransactionFragment : BaseFragment(), AddTransactionView {
     }
 
     private fun initUI() {
-        initPeriodSeekBar()
+        initBaseViews()
         initCategoriesList()
         initWalletsList()
-        initInputListeners()
         initCreateTransactionButton()
         initRadioGroups()
     }
 
-    private fun initPeriodSeekBar() {
-        sb_period.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-
-                isPeriodic = progress != 0
-
-                tv_period.text = when (progress) {
-                    0 -> resources.getString(R.string.unspecified)
-                    1 -> resources.getString(R.string.every_day)
-                    2 -> resources.getString(R.string.every_three_days)
-                    3 -> resources.getString(R.string.every_week)
-                    4 -> resources.getString(R.string.every_month)
-                    else -> resources.getString(R.string.unspecified)
-                }
-
-                period = when (progress) {
-                    0 -> 0
-                    1 -> MS_IN_DAY
-                    2 -> MS_IN_DAY * 3L
-                    3 -> MS_IN_DAY * 7L
-                    4 -> MS_IN_DAY * 30L
-                    else -> 0
-                }
-
-            }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
-        })
+    private fun initBaseViews() {
+        if (isTemplate) btn_create_as_transaction.text = resources.getString(R.string.create_draft)
+        rg_income_expense.check(R.id.btn_expense)
     }
 
     private fun initWalletsList() {
@@ -144,39 +108,65 @@ class AddTransactionFragment : BaseFragment(), AddTransactionView {
         rv_categories.adapter = categoriesAdapter
     }
 
-    private fun initInputListeners() {
-        val inputObserver: Observable<Boolean> = Observable.combineLatest(
-                RxTextView.textChanges(et_transaction_sum),
-                RxTextView.textChanges(et_comment_on_transaction),
-                BiFunction { amount, comment ->
-                    amount.isNotEmpty()
-                            && comment.isNotEmpty()
-                            && rg_currencies.checkedRadioButtonId != -1
-                            && ::selectedWallet.isInitialized
-                            && ::selectedCategory.isInitialized
-                })
-        inputDisposable = inputObserver.subscribe(btn_create_transaction::setEnabled)
-    }
-
     private fun initCreateTransactionButton() {
-        btn_create_transaction.setOnClickListener {
-            amount = et_transaction_sum.text.toString().toDouble()
-            if (!isIncome)
-                amount = -amount
+        btn_create_as_transaction.setOnClickListener {
             comment = et_comment_on_transaction.text.toString()
-            val transaction = Transaction(date = date,
-                    comment = comment, walletId = selectedWallet.id,
-                    amount = amount, currency = selectedCurrency, periodic = isPeriodic, period = period)
-            addTransactionPresenter.createTransaction(transaction)
+
+            if (!::selectedWallet.isInitialized
+                    || et_transaction_sum.text == null || et_transaction_sum.text.toString().isEmpty()) {
+                Toast.makeText(context!!, R.string.create_transaction_error, Toast.LENGTH_SHORT).show()
+            } else {
+                amount = et_transaction_sum.text.toString().toDouble()
+                if (!isIncome)
+                    amount = -amount
+                val transaction = Transaction(date = date,
+                        comment = comment, walletId = selectedWallet.id,
+                        category = selectedCategory,
+                        amount = amount, currency = selectedWallet.majorCurrency, periodic = isPeriodic,
+                        template = false, period = period)
+                addTransactionPresenter.createTransaction(transaction)
+            }
         }
+
+        btn_create_as_template.setOnClickListener {
+            comment = et_comment_on_transaction.text.toString()
+            if (!::selectedWallet.isInitialized || et_transaction_sum.text.toString().isEmpty()) {
+                Toast.makeText(context!!, R.string.create_transaction_error, Toast.LENGTH_SHORT).show()
+            } else {
+                amount = et_transaction_sum.text.toString().toDouble()
+                if (!isIncome)
+                    amount = -amount
+                val transaction = Transaction(date = date,
+                        comment = comment, walletId = selectedWallet.id,
+                        category = selectedCategory,
+                        amount = amount, currency = selectedWallet.majorCurrency, periodic = isPeriodic,
+                        template = true, period = period)
+                addTransactionPresenter.createTemplate(transaction)
+            }
+        }
+
     }
 
     private fun initRadioGroups() {
-        rg_currencies.setOnCheckedChangeListener { group, checkedId ->
+        rg_income_expense.setOnCheckedChangeListener { group, checkedId ->
             when (checkedId) {
-                R.id.btn_rub -> selectedCurrency = Currency.RUB
-                R.id.btn_usd -> selectedCurrency = Currency.USD
-                R.id.btn_eur -> selectedCurrency = Currency.EUR
+                R.id.btn_income -> isIncome = true
+                R.id.btn_expense -> isIncome = false
+            }
+        }
+        rg_period.setOnCheckedChangeListener { group, checkedId ->
+            if (checkedId == selectedPeriodId) {
+                rg_period.clearCheck()
+                selectedPeriodId = checkedId
+                isPeriodic = false
+            } else {
+                when (checkedId) {
+                    R.id.btn_every_day -> period = MS_IN_DAY
+                    R.id.btn_every_three_days -> period = MS_IN_DAY * 3
+                    R.id.btn_every_week -> period = MS_IN_DAY * 7
+                    R.id.btn_every_month -> period = MS_IN_DAY * 30
+                }
+                isPeriodic = true
             }
         }
     }

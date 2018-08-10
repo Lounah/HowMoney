@@ -21,9 +21,11 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import ru.popov.bodya.core.mvp.AppActivity
 import ru.popov.bodya.howmoney.R
+import ru.popov.bodya.howmoney.domain.wallet.models.Wallet
 import ru.popov.bodya.howmoney.presentation.mvp.account.AccountPresenter
 import ru.popov.bodya.howmoney.presentation.mvp.account.AccountView
 import ru.popov.bodya.howmoney.presentation.ui.about.fragments.AboutFragment
+import ru.popov.bodya.howmoney.presentation.ui.addtransaction.AddOperationFragment
 import ru.popov.bodya.howmoney.presentation.ui.addtransaction.AddTransactionFragment
 import ru.popov.bodya.howmoney.presentation.ui.common.Screens.ABOUT_SCREEN
 import ru.popov.bodya.howmoney.presentation.ui.common.Screens.NEW_TRANSACTION_SCREEN
@@ -33,17 +35,16 @@ import ru.popov.bodya.howmoney.presentation.ui.common.Screens.WALLET_SCREEN
 import ru.popov.bodya.howmoney.presentation.ui.settings.fragments.SettingsFragment
 import ru.popov.bodya.howmoney.presentation.ui.stats.StatsFragment
 import ru.popov.bodya.howmoney.presentation.ui.wallet.WalletFragment
+import ru.popov.bodya.howmoney.presentation.ui.addwallet.AddWalletFragment
 import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.android.SupportAppNavigator
 import javax.inject.Inject
 
 
-/**
- *  @author popovbodya
- */
-class AccountActivity : AppActivity(), AccountView, NavigationView.OnNavigationItemSelectedListener,
+class AccountActivity : AppActivity(), AccountView,
+        NavigationView.OnNavigationItemSelectedListener,
+        AddWalletFragment.OnWalletCreatedCallback,
         HasSupportFragmentInjector {
-
     @Inject
     @InjectPresenter
     lateinit var accountPresenter: AccountPresenter
@@ -51,6 +52,8 @@ class AccountActivity : AppActivity(), AccountView, NavigationView.OnNavigationI
     lateinit var navigationHolder: NavigatorHolder
     @Inject
     lateinit var injector: DispatchingAndroidInjector<Fragment>
+
+    private lateinit var addWalletFragment: AddWalletFragment
 
     @ProvidePresenter
     fun provideOverviewPresenter(): AccountPresenter = accountPresenter
@@ -86,6 +89,9 @@ class AccountActivity : AppActivity(), AccountView, NavigationView.OnNavigationI
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main, menu)
+        if (supportFragmentManager.backStackEntryCount == 0) {
+            onShowMenuItem(R.id.add_wallet)
+        } else onHideMenuItem(R.id.add_wallet)
         return true
     }
 
@@ -94,25 +100,51 @@ class AccountActivity : AppActivity(), AccountView, NavigationView.OnNavigationI
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.nav_wallet -> {
+                nav_view.setCheckedItem(R.id.nav_wallet)
                 accountPresenter.navigateToWalletScreen()
             }
             R.id.nav_settings -> {
+                nav_view.setCheckedItem(R.id.nav_settings)
                 accountPresenter.navigateToSettingsScreen()
+            }
+            R.id.nav_stats -> {
+                nav_view.setCheckedItem(R.id.nav_stats)
+                accountPresenter.navigateToStatsScreen()
             }
         }
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val id = item.itemId
+        when (id) {
+            R.id.add_wallet -> {
+                addWalletFragment = AddWalletFragment()
+                addWalletFragment.show(supportFragmentManager, "ADD_WALLET_FRAG")
+            }
+        }
+        return true
+    }
+
+    override fun onWalletComposed(wallet: Wallet) {
+        accountPresenter.createWallet(wallet)
+    }
+
+    override fun onWalletCreated() {
+        addWalletFragment.dismiss()
+        Toast.makeText(this, R.string.wallet_successfully_created, Toast.LENGTH_SHORT).show()
+    }
+
     fun updateToolBar(titleResId: Int) {
         toolbar.title = getString(titleResId)
         toolbar.setNavigationOnClickListener { onBackPressed() }
         if (supportFragmentManager.backStackEntryCount == 0) {
-            onShowMenuItem(R.id.graphics)
             initToggle()
+            onShowMenuItem(R.id.add_wallet)
             drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
         } else {
-            onHideMenuItem(R.id.graphics)
+            onHideMenuItem(R.id.add_wallet)
             drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
             setBackArrow(true)
         }
@@ -120,6 +152,7 @@ class AccountActivity : AppActivity(), AccountView, NavigationView.OnNavigationI
 
     private fun initUI() {
         nav_view.setNavigationItemSelectedListener(this)
+        nav_view.setCheckedItem(R.id.nav_wallet)
         toolbar.title = resources.getString(R.string.wallet)
         setSupportActionBar(toolbar)
         initToggle()
@@ -127,10 +160,12 @@ class AccountActivity : AppActivity(), AccountView, NavigationView.OnNavigationI
 
     private fun onShowMenuItem(resId: Int) {
         toolbar.menu.findItem(resId)?.isVisible = true
+        invalidateOptionsMenu()
     }
 
     private fun onHideMenuItem(resId: Int) {
         toolbar.menu.findItem(resId)?.isVisible = false
+        invalidateOptionsMenu()
     }
 
     private fun setBackArrow(state: Boolean) {
@@ -154,7 +189,7 @@ class AccountActivity : AppActivity(), AccountView, NavigationView.OnNavigationI
             return when (screenKey) {
                 WALLET_SCREEN -> WalletFragment()
                 STATS_SCREEN -> StatsFragment()
-                NEW_TRANSACTION_SCREEN -> AddTransactionFragment.newInstance(data as Boolean)
+                NEW_TRANSACTION_SCREEN -> AddOperationFragment()
                 SETTINGS_SCREEN -> SettingsFragment()
                 ABOUT_SCREEN -> AboutFragment()
                 else -> null

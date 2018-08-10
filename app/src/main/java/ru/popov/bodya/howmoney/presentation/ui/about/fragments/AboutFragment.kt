@@ -13,13 +13,21 @@ import ru.popov.bodya.core.mvp.AppFragment
 import ru.popov.bodya.howmoney.R
 import ru.popov.bodya.howmoney.presentation.mvp.about.AboutPresenter
 import ru.popov.bodya.howmoney.presentation.mvp.about.AboutView
+import ru.popov.bodya.howmoney.presentation.ui.account.activities.AccountActivity
+import ru.popov.bodya.howmoney.presentation.ui.common.BaseFragment
 import javax.inject.Inject
 
 
 /**
  *  @author popovbodya
  */
-class AboutFragment : AppFragment(), AboutView {
+class AboutFragment : BaseFragment(), AboutView {
+    override val TAG: String
+        get() = "ABOUT_FRAGMENT"
+    override val layoutRes: Int
+        get() = R.layout.fragment_about_app
+    override val toolbarTitleId: Int
+        get() = R.string.about_application
 
     @Inject
     @InjectPresenter
@@ -33,12 +41,6 @@ class AboutFragment : AppFragment(), AboutView {
         super.onCreate(savedInstanceState)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view: View = inflater.inflate(R.layout.fragment_about_app, container, false)
-        setHasOptionsMenu(true)
-        return view
-    }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
@@ -47,6 +49,10 @@ class AboutFragment : AppFragment(), AboutView {
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun setUpToolbarTitle(resId: Int) {
+        (activity as AccountActivity).updateToolBar(resId)
     }
 
     override fun showAppVersion(version: String) {
