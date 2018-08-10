@@ -6,7 +6,7 @@ import android.arch.persistence.room.TypeConverter
 
 @Entity(tableName = "wallets")
 data class Wallet(@PrimaryKey(autoGenerate = true) val id: Int = 0,
-                  val amount: Double = 0.0,
+                  var amount: Double = 0.0,
                   val type: Type,
                   val majorCurrency: Currency,
                   val name: String = "")
