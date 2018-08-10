@@ -1,54 +1,114 @@
 <resources>
     <!--application-->
-    <string name="app_name">HowMoney</string>
-    <string name="email">popovbodya@gmail.com</string>
+    <string name="app_name">WalletTracker</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="email">lounah@gmail.com</string>
     <string name="currency_usd">USD</string>
     <string name="currency_rub">RUB</string>
-    <string name="wallet_debit">Дебетовые карты</string>
-    <string name="wallet_credit">Кредитные карты</string>
-    <string name="wallet_cache">Наличные</string>
-    <string name="enrollment">Доходы</string>
-    <string name="expense">Расходы</string>
+    <string name="dollar_sign">$</string>
+    <string name="euro_sign">€</string>
+    <string name="rubble_sign">₽</string>
+    <string name="dash">-</string>
+    <string name="rub">RUB</string>
+    <string name="usd">USD</string>
+    <string name="eur">EUR</string>
+    <string name="error_loading_data">Произошла ошибка при загрузке данных</string>
+    <string name="all_transactions">Все транзакции</string>
+    <string name="incomes">Доходы</string>
+    <string name="expenses">Расходы</string>
+    <string name="income">Доход</string>
+    <string name="expense">Расход</string>
+    <string name="last_update_time">Обновлено: </string>
+    <string name="settings_username">Пользователь</string>
+    <string name="developer_sign">© 2018 #Lounah</string>
+    <string name="system_prefs">Cистемные настройки</string>
+    <string name="success_deletion_result">Данные успешно удалены</string>
+    <string name="add_wallet">Новый кошелек</string>
+    <string name="wallet_successfully_created">Кошелек успешно создан!</string>
+    <string name="please_fill_all_fields">Пожалуйста,заполните все поля</string>
 
-    <!--Account screen-->
-    <string name="account_menu_settings">Настройки</string>
-    <string name="account_menu_about">О приложении</string>
-    <string name="account_menu_wallet">Кошелек</string>
-    <string name="account_submenu_wallet_debit">Дебетовые карты</string>
-    <string name="account_submenu_wallet_credit">Кредитные карты</string>
-    <string name="account_submenu_wallet_cache">Наличные</string>
-    <string name="account_amount">%.1f %s</string>
-
-    <!--Enrollment screen-->
-    <string name="enrollment_toolbar_title">Доходы</string>
-    <string name="enrollment_diagram_title">За все время</string>
-
-    <!--Expense screen-->
-    <string name="expense_toolbar_title">Расходы</string>
-    <string name="expense_diagram_title">За все время</string>
-
-    <!--Replenishment screen-->
-    <string name="replenishment_toolbar_title">Добавление значения в кошелек</string>
-    <string name="replenishment_enrollment_toolbar_arg">дохода"</string>
-    <string name="replenishment_expense_toolbar_arg">расхода"</string>
-    <string name="replenishment_amount_edit_text_hint">Количество"</string>
-    <string name="replenishment_add_button_text">Добавить"</string>
-
+    <!--Wallet screen-->
+    <string name="savings">Сбережения</string>
+    <string name="current_balance">Текущий баланс</string>
+    <string name="create_transaction">Добавить транзакцию</string>
+    <string name="transaction_category">Категория транзакции</string>
+    <string name="transaction_wallet">Кошелек транзакции</string>
+    <string name="credit_card">Кредитная карта</string>
+    <string name="bank_account">Банковский счет</string>
+    <string name="wallet">Кошелек</string>
+    <string name="settings">Настройки</string>
+    <string name="log_out">Выйти</string>
+    <string name="buy_rate">Покупка</string>
+    <string name="sell_rate">Продажа</string>
+    <string name="cash">Основной кошелек</string>
+    <string name="statistics">Статистика</string>
+    <string name="new_income">Новый доход</string>
+    <string name="new_expense">Новый расход</string>
+    <string name="create_wallet">Новый кошелек</string>
+    <string name="wallet_name">Название кошелька</string>
+    <string name="wallet_type">Тип кошелька</string>
+    <string name="delete">Удалить</string>
 
     <!--Settings screen-->
-    <string name="settings_currency_type_section">Выбор валюты</string>
-    <string name="settings_currency_title">Выберите стандартную валюту для показа</string>
-    <string name="settings_default_value">USD</string>
-    <string name="settings_currency_key">settings_currency_key</string>
+    <string name="action_settings">Settings</string>
+    <string name="developers">Разработчики</string>
+    <string name="confidentiality_policy">Политика конфиденциальности</string>
+    <string name="notifications">Уведомления</string>
+    <string name="about_application">О приложении</string>
+    <string name="clear_data">Очистить все данные</string>
+    <string name="help">Помощь</string>
+    <string name="contact_support">Написать в поддержку</string>
+    <string name="other_settings">Другие настройки</string>
+    <string name="major_currency">Основная валюта</string>
+    <string name="version_code">Версия приложения: %1$s</string>
+    <string name="copyright">© 2018 #Lounah</string>
 
+    <!--New transaction screen-->
+    <string name="transaction_created">Транзакция успешно создана!</string>
+    <string name="transaction_period">Периодичность транзакции</string>
+    <string name="unspecified">Не задан</string>
+    <string name="every_day">Каждый день</string>
+    <string name="every_three_days">Каждые три дня</string>
+    <string name="every_week">Каждую неделю</string>
+    <string name="every_month">Каждый месяц</string>
+    <string name="balance">Баланс</string>
+    <string name="food">Еда</string>
+    <string name="clothes">Одежда</string>
+    <string name="communal_payments">Коммунальные платежи</string>
+    <string name="rest">Отдых</string>
+    <string name="education">Образование</string>
+    <string name="home">Дом</string>
+    <string name="family">Семья</string>
+    <string name="auto">Автомобиль</string>
+    <string name="treatment">Лечение</string>
+    <string name="salary">Зарплата</string>
+    <string name="other">Другое</string>
+    <string name="transaction_amount">Сумма транзакции</string>
+    <string name="transaction_currency">Валюта транзакции</string>
+    <string name="transaction_commentary">Комментарий к транзакции</string>
+    <string name="please_type_here_short_comment">Короткий комментарий</string>
+    <string name="create">Создать</string>
+    <string name="transaction">Транзакция</string>
+    <string name="draft">Шаблон</string>
+    <string name="create_draft">Создать шаблон</string>
+    <string name="from_template">Из шаблона</string>
+    <string name="create_transaction_error">Пожалуйста, выберете кошелек/категорию</string>
+    <string name="save_as_draft">Создать как шаблон</string>
+
+
+    <!--Stats screen-->
+    <string name="stats_by_category">Статистика по категориям</string>
+    <string name="diagram">Диаграма</string>
 
     <!--About screen-->
-    <string name="about_toolbar_title">О приложении</string>
     <string name="about_version_template">0.1</string>
-    <string name="about_author">Автор:\nПопов Богдан</string>
-    <string name="about_email_title">Почта:\npopovbodya@gmail.com</string>
-    <string name="about_yandex_school">В рамках проекта:\nШкола мобильной разработки Яндекс</string>
     <string name="about_logo_image_content_desc">Логотип приложения</string>
     <string name="about_default_version_code">0.1</string>
     <string name="about_email_subject">Отзыв о приложении</string>
+    <string name="current_currency">Текущий курс валют</string>
+
 </resources>

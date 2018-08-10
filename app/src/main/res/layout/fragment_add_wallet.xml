@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/settingsBackgroundColor"
+    android:theme="@style/AppTheme">
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/et_wallet_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:hint="@string/wallet_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_add_wallet">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/et_wallet_name"
+            style="@android:style/Widget.Material.Light.EditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:maxLines="1" />
+
+
+    </android.support.design.widget.TextInputLayout>
+
+    <TextView
+        android:id="@+id/tv_major_currency"
+        style="@style/TextStyle.Small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/major_currency"
+        android:textAllCaps="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_wallet_layout" />
+
+    <info.hoang8f.android.segmented.SegmentedGroup xmlns:segmentedgroup="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/rg_currencies"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal"
+        android:weightSum="3"
+        segmentedgroup:layout_constraintEnd_toEndOf="parent"
+        segmentedgroup:layout_constraintStart_toStartOf="parent"
+        segmentedgroup:layout_constraintTop_toBottomOf="@+id/tv_major_currency"
+        segmentedgroup:sc_border_width="1dp"
+        segmentedgroup:sc_checked_text_color="@color/white"
+        segmentedgroup:sc_corner_radius="2dp"
+        segmentedgroup:sc_tint_color="@color/colorAccent">
+
+        <RadioButton
+            android:id="@+id/btn_rub"
+            style="@style/RadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/rub" />
+
+        <RadioButton
+            android:id="@+id/btn_eur"
+            style="@style/RadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/eur" />
+
+        <RadioButton
+            android:id="@+id/btn_usd"
+            style="@style/RadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/usd" />
+
+    </info.hoang8f.android.segmented.SegmentedGroup>
+
+    <TextView
+        android:id="@+id/tv_wallet_type"
+        style="@style/TextStyle.Small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/wallet_type"
+        android:textAllCaps="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rg_currencies" />
+
+    <info.hoang8f.android.segmented.SegmentedGroup xmlns:segmentedgroup="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/rg_wallet_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal"
+        android:weightSum="3"
+        segmentedgroup:layout_constraintEnd_toEndOf="parent"
+        segmentedgroup:layout_constraintStart_toStartOf="parent"
+        segmentedgroup:layout_constraintTop_toBottomOf="@+id/tv_wallet_type"
+        segmentedgroup:sc_border_width="1dp"
+        segmentedgroup:sc_checked_text_color="@color/white"
+        segmentedgroup:sc_corner_radius="2dp"
+        segmentedgroup:sc_tint_color="@color/colorAccent">
+
+        <RadioButton
+            android:id="@+id/btn_cash"
+            style="@style/RadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/cash" />
+
+        <RadioButton
+            android:id="@+id/btn_bank_account"
+            style="@style/RadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/bank_account" />
+
+        <RadioButton
+            android:id="@+id/btn_debit_card"
+            style="@style/RadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/credit_card" />
+
+    </info.hoang8f.android.segmented.SegmentedGroup>
+
+    <Button
+        android:id="@+id/btn_add_wallet"
+        style="@android:style/Widget.Material.Button.Borderless.Colored"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/app_margin"
+        android:layout_marginBottom="64dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/create"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.51"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rg_wallet_type"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/tv_add_wallet"
+        style="@style/TextStyle.Large"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/add_wallet"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</android.support.constraint.ConstraintLayout>

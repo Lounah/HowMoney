@@ -1,16 +1,14 @@
 package ru.popov.bodya.howmoney.presentation.ui.about.fragments
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import dagger.android.support.AndroidSupportInjection
+import kotlinx.android.synthetic.main.fragment_about_app.*
 import ru.popov.bodya.core.mvp.AppFragment
 import ru.popov.bodya.howmoney.R
 import ru.popov.bodya.howmoney.presentation.mvp.about.AboutPresenter
@@ -27,8 +25,6 @@ class AboutFragment : AppFragment(), AboutView {
     @InjectPresenter
     lateinit var aboutPresenter: AboutPresenter
 
-    private lateinit var appVersionTextView: TextView
-
     @ProvidePresenter
     fun provideAboutPresenter(): AboutPresenter = aboutPresenter
 
@@ -38,9 +34,8 @@ class AboutFragment : AppFragment(), AboutView {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view: View = inflater.inflate(R.layout.about_fragment_layout, container, false)
+        val view: View = inflater.inflate(R.layout.fragment_about_app, container, false)
         setHasOptionsMenu(true)
-        initViews(view)
         return view
     }
 
@@ -55,20 +50,6 @@ class AboutFragment : AppFragment(), AboutView {
     }
 
     override fun showAppVersion(version: String) {
-        appVersionTextView.text = version
-    }
-
-    private fun initViews(parentView: View) {
-        appVersionTextView = parentView.findViewById(R.id.app_version_text_view)
-        val emailTextView: TextView = parentView.findViewById(R.id.author_email_text_view)
-        emailTextView.setOnClickListener { aboutPresenter.onEmailClick() }
-        initToolbar(parentView)
-    }
-
-    private fun initToolbar(parentView: View) {
-        val toolbar = parentView.findViewById<Toolbar>(R.id.toolbar)
-        val activity = activity as AppCompatActivity
-        activity.setSupportActionBar(toolbar)
-        activity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        tv_app_version.text = version
     }
 }

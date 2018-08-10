@@ -4,18 +4,19 @@ import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import ru.popov.bodya.howmoney.di.common.modules.SettingsModule
 import ru.popov.bodya.howmoney.presentation.ui.about.fragments.AboutFragment
-import ru.popov.bodya.howmoney.presentation.ui.budget.fragments.BudgetFragment
-import ru.popov.bodya.howmoney.presentation.ui.enrollment.EnrollmentFragment
-import ru.popov.bodya.howmoney.presentation.ui.expense.ExpenseFragment
-import ru.popov.bodya.howmoney.presentation.ui.replenishment.fragments.ReplenishmentFragment
+import ru.popov.bodya.howmoney.presentation.ui.addtransaction.AddOperationFragment
+import ru.popov.bodya.howmoney.presentation.ui.addtransaction.AddTransactionFragment
+import ru.popov.bodya.howmoney.presentation.ui.addtransaction.addtemplate.AddTemplateFragment
+import ru.popov.bodya.howmoney.presentation.ui.addwallet.AddWalletFragment
 import ru.popov.bodya.howmoney.presentation.ui.settings.fragments.SettingsFragment
+import ru.popov.bodya.howmoney.presentation.ui.stats.StatsFragment
+import ru.popov.bodya.howmoney.presentation.ui.wallet.WalletFragment
 
 /**
  *  @author popovbodya
  */
 @Module
 interface AccountFragmentsInjectorBuilders {
-
     @ContributesAndroidInjector
     fun provideAboutFragment(): AboutFragment
 
@@ -23,14 +24,20 @@ interface AccountFragmentsInjectorBuilders {
     fun provideSettingFragment(): SettingsFragment
 
     @ContributesAndroidInjector
-    fun provideAccountFragment(): BudgetFragment
+    fun provideWalletFragment(): WalletFragment
 
     @ContributesAndroidInjector
-    fun provideEnrollmentFragment(): EnrollmentFragment
+    fun provideStatsFragment(): StatsFragment
 
     @ContributesAndroidInjector
-    fun provideExpenseFragment(): ExpenseFragment
+    fun provideAddWalletFragment(): AddWalletFragment
 
     @ContributesAndroidInjector
-    fun provideReplenishmentFragment(): ReplenishmentFragment
+    fun provideAddOperationFragment() : AddOperationFragment
+
+    @ContributesAndroidInjector
+    fun provideAddTemplateFragment(): AddTemplateFragment
+
+    @ContributesAndroidInjector
+    fun provideAddTransactionFragment(): AddTransactionFragment
 }

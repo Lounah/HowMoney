@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.getkeepsafe.dexcount'
 apply from: "$project.rootDir/secretconfig.gradle"
 
@@ -55,9 +56,17 @@ dependencies {
     implementation libraries.supportAppCompat
     implementation libraries.supportDesign
     implementation libraries.supportConstraintLayout
+    implementation libraries.supportCardView
     implementation libraries.supportPreference
     // kotlin
     implementation libraries.kotlin
+    // jetpack architecture
+    implementation libraries.archExtensions
+    implementation libraries.reactivestreams
+    kapt libraries.lifecycleProcessor
+    implementation libraries.room
+    implementation libraries.roomRx
+    kapt libraries.roomProcessor
     // dagger
     implementation libraries.dagger
     implementation libraries.daggerAndroid
@@ -66,6 +75,7 @@ dependencies {
     // rxjava
     implementation libraries.rxKotlin
     implementation libraries.rxAndroid
+    implementation libraries.rxBinding
     // moxy
     implementation libraries.moxy
     implementation libraries.moxyAndroid
@@ -79,8 +89,21 @@ dependencies {
     implementation libraries.retrofitRxJavaAdapter
     // custom views
     implementation libraries.decoview
+    // temporary
+    implementation 'com.ncapdevi:frag-nav:2.4.0'
+    implementation 'org.fabiomsr:moneytextview:1.1.0'
+    implementation 'com.github.aakira:expandable-layout:1.6.0@aar'
+    implementation 'info.hoang8f:android-segmented:1.0.6'
+    implementation 'com.getbase:floatingactionbutton:1.10.1'
+    implementation 'com.appyvet:materialrangebar:1.4.3'
     // test
     testImplementation libraries.junit
     testImplementation libraries.hamcrest
     testImplementation libraries.mockito
+    testImplementation libraries.robolectric
+
+    androidTestImplementation libraries.androidTestRunner
+    androidTestImplementation libraries.espressoCore
+    androidTestImplementation libraries.espressoContrib
+    androidTestImplementation libraries.androidTestRules
 }

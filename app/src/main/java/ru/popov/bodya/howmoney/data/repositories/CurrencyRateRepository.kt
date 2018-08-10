@@ -1,19 +1,21 @@
 package ru.popov.bodya.howmoney.data.repositories
 
-import io.reactivex.Completable
 import io.reactivex.Single
-import ru.popov.bodya.howmoney.data.database.preferences.SharedPreferencesWrapper
+import ru.popov.bodya.howmoney.data.database.dao.ExchangeRateDao
 import ru.popov.bodya.howmoney.data.network.api.CurrenciesRateApiWrapper
 import ru.popov.bodya.howmoney.data.network.beans.CurrentRateBean
 import ru.popov.bodya.howmoney.domain.wallet.models.Currency
+import ru.popov.bodya.howmoney.domain.wallet.models.ExchangeRate
 
-/**
- *  @author popovbodya
- */
-class CurrencyRateRepository(private val currenciesRateApiWrapper: CurrenciesRateApiWrapper, private val sharedPreferencesWrapper: SharedPreferencesWrapper) {
+class CurrencyRateRepository(private val currenciesRateApiWrapper: CurrenciesRateApiWrapper,
+                             private val exchangeRateDao: ExchangeRateDao) {
+    fun getExchangeRate(fromCurrency: Currency, toCurrency: Currency): Single<Double> =
+            getExchangeRateFromApi(fromCurrency, toCurrency)
+                    .doOnSuccess {
+                        exchangeRateDao.insert(ExchangeRate(fromCurrency, toCurrency, it.result, it.date))
+                    }.map { it -> it.result }
+                    .onErrorResumeNext { exchangeRateDao.getExchangeRate(fromCurrency, toCurrency) }
 
-    fun getExchangeRate(): Single<CurrentRateBean> =
-            currenciesRateApiWrapper.getCurrentRate().doOnSuccess { sharedPreferencesWrapper.saveExchangeRate(it) }
-
-    fun getCachedExchangeRate(): Double = sharedPreferencesWrapper.getExchangeRate().toDouble()
+    private fun getExchangeRateFromApi(fromCurrency: Currency, toCurrency: Currency): Single<CurrentRateBean>
+            = currenciesRateApiWrapper.getCurrentRate(fromCurrency, toCurrency)
 }
