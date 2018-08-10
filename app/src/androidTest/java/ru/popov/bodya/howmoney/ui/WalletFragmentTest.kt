@@ -15,7 +15,11 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import ru.popov.bodya.howmoney.R
 import ru.popov.bodya.howmoney.presentation.ui.account.activities.AccountActivity
-import ru.popov.bodya.howmoney.presentation.ui.addtransaction.AddTransactionFragment
+import ru.popov.bodya.howmoney.presentation.ui.addtransaction.AddOperationFragment
+import android.support.test.espresso.matcher.ViewMatchers.isDisplayed
+import android.support.test.espresso.matcher.RootMatchers.withDecorView
+import org.hamcrest.Matchers.`is`
+
 
 @RunWith(AndroidJUnit4::class)
 class WalletFragmentTest {
@@ -29,12 +33,20 @@ class WalletFragmentTest {
 
         activityTestRule.activity.supportFragmentManager
                 .beginTransaction()
-                .replace(R.id.main_container, AddTransactionFragment.newInstance(true))
+                .replace(R.id.main_container, AddOperationFragment())
                 .commit()
 
-        checkButtonState(false, R.id.btn_create_transaction)
+        onView(withId(R.id.btn_income)).perform(click())
 
-        onView(withId(R.id.btn_create_transaction)).check(matches(not((isEnabled()))))
+        scrollToView(R.id.btn_create_as_transaction)
+
+        onView(withId(R.id.btn_create_as_transaction)).perform(click())
+
+        onView(withText(R.string.please_fill_all_fields))
+                .inRoot(withDecorView(not(`is`(activityTestRule.activity.window.decorView))))
+                .check(matches(isDisplayed()))
+
+        scrollToView(R.id.et_transaction_sum)
 
         typeTextInEditText(R.id.et_transaction_sum, "100.0")
 
@@ -42,20 +54,19 @@ class WalletFragmentTest {
 
         performClickOnItemInRecyclerView(R.id.rv_categories, 0)
 
-        scrollToView(R.id.btn_create_transaction)
+        scrollToView(R.id.btn_create_as_transaction)
         performClickOnItemInRecyclerView(R.id.rv_wallets, 0)
 
         typeTextInEditText(R.id.et_comment_on_transaction, "Test Comment")
-        checkButtonState(true, R.id.btn_create_transaction)
 
         closeSoftKeyboard()
 
-        onView(withId(R.id.btn_create_transaction)).perform(click())
+        onView(withId(R.id.btn_create_as_transaction)).perform(click())
     }
 
     @Test
     fun check_IfTransactionCreated() {
-                onView(withId(R.id.rv_transactions))
+        onView(withId(R.id.rv_transactions))
                 .check(matches(hasDescendant(withText("Test Comment"))))
     }
 
@@ -66,7 +77,7 @@ class WalletFragmentTest {
 
     private fun performClickOnItemInRecyclerView(viewId: Int, itemPosition: Int) {
         onView(withId(viewId))
-            .perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(itemPosition, click()))
+                .perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(itemPosition, click()))
     }
 
     private fun typeTextInEditText(viewId: Int, text: String) {
