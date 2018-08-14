@@ -1,33 +1,37 @@
 package ru.popov.bodya.howmoney.presentation.ui.about.fragments
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import dagger.android.support.AndroidSupportInjection
+import kotlinx.android.synthetic.main.fragment_about_app.*
 import ru.popov.bodya.core.mvp.AppFragment
 import ru.popov.bodya.howmoney.R
 import ru.popov.bodya.howmoney.presentation.mvp.about.AboutPresenter
 import ru.popov.bodya.howmoney.presentation.mvp.about.AboutView
+import ru.popov.bodya.howmoney.presentation.ui.account.activities.AccountActivity
+import ru.popov.bodya.howmoney.presentation.ui.common.BaseFragment
 import javax.inject.Inject
 
 
 /**
  *  @author popovbodya
  */
-class AboutFragment : AppFragment(), AboutView {
+class AboutFragment : BaseFragment(), AboutView {
+    override val TAG: String
+        get() = "ABOUT_FRAGMENT"
+    override val layoutRes: Int
+        get() = R.layout.fragment_about_app
+    override val toolbarTitleId: Int
+        get() = R.string.about_application
 
     @Inject
     @InjectPresenter
     lateinit var aboutPresenter: AboutPresenter
-
-    private lateinit var appVersionTextView: TextView
 
     @ProvidePresenter
     fun provideAboutPresenter(): AboutPresenter = aboutPresenter
@@ -35,13 +39,6 @@ class AboutFragment : AppFragment(), AboutView {
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidSupportInjection.inject(this)
         super.onCreate(savedInstanceState)
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view: View = inflater.inflate(R.layout.about_fragment_layout, container, false)
-        setHasOptionsMenu(true)
-        initViews(view)
-        return view
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -54,21 +51,11 @@ class AboutFragment : AppFragment(), AboutView {
         }
     }
 
+    override fun setUpToolbarTitle(resId: Int) {
+        (activity as AccountActivity).updateToolBar(resId)
+    }
+
     override fun showAppVersion(version: String) {
-        appVersionTextView.text = version
-    }
-
-    private fun initViews(parentView: View) {
-        appVersionTextView = parentView.findViewById(R.id.app_version_text_view)
-        val emailTextView: TextView = parentView.findViewById(R.id.author_email_text_view)
-        emailTextView.setOnClickListener { aboutPresenter.onEmailClick() }
-        initToolbar(parentView)
-    }
-
-    private fun initToolbar(parentView: View) {
-        val toolbar = parentView.findViewById<Toolbar>(R.id.toolbar)
-        val activity = activity as AppCompatActivity
-        activity.setSupportActionBar(toolbar)
-        activity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        tv_app_version.text = version
     }
 }

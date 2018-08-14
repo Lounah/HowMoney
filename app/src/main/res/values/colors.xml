@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--Common-->
-    <color name="colorPrimary">#ffffff</color>
-    <color name="colorPrimaryDark">#eeeeee</color>
-    <color name="colorAccent">#F44336</color>
-    <color name="ic_launcher_background">#F4000F</color>
-
-    <!--ArcView-->
-    <color name="arcViewColorRed">#FF0000</color>
-    <color name="arcViewColorGreen">#00ff00</color>
-    <color name="arcViewColorBlue">#0000ff</color>
-    <color name="arcViewColorBlack">#000000</color>
-    <color name="arcViewColorYellow">#ffff00</color>
-    <color name="arcViewColorOrange">#ff8000</color>
-
+    <color name="colorPrimary">#6a1b9a</color>
+    <color name="colorPrimaryDark">#460284</color>
+    <color name="colorAccent">#ffab00</color>
+    <color name="greyLight">#e0e0e0</color>
+    <color name="greyWarm">#eaeff1</color>
+    <color name="grey">#757575</color>
+    <color name="greyDark">#424242</color>
+    <color name="gradientStart">#2b2b2b</color>
+    <color name="gradientEnd">#000000</color>
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="settingsBackgroundColor">#81f9f8f8</color>
+    <color name="transactionTypeColor">#757575</color>
+    <color name="colorExpense">#d50000</color>
+    <color name="colorIncome">#00c853</color>
+    <color name="black_semi_transparent">#B2000000</color>
+    <color name="selectedItemForeground">#246210b5</color>
 </resources>

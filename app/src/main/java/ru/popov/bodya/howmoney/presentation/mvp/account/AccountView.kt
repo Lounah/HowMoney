@@ -6,6 +6,5 @@ import ru.popov.bodya.core.mvp.AppView
  *  @author popovbodya
  */
 interface AccountView : AppView {
-
-
+    fun onWalletCreated()
 }

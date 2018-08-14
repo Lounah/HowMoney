@@ -9,4 +9,34 @@
         <item>@string/currency_usd</item>
         <item>@string/currency_rub</item>
     </string-array>
+
+    <string-array name="currencies">
+        <item>@string/rub</item>
+        <item>@string/usd</item>
+        <item>@string/eur</item>
+    </string-array>
+
+    <string-array name="transaction_options">
+        <item>@string/delete</item>
+    </string-array>
+
+    <string-array name="wallets">
+        <item>@string/cash</item>
+        <item>@string/bank_account</item>
+        <item>@string/credit_card</item>
+    </string-array>
+
+    <string-array name="transaction_categories">
+        <item>@string/food</item>
+        <item>@string/clothes</item>
+        <item>@string/rest</item>
+        <item>@string/education</item>
+        <item>@string/home</item>
+        <item>@string/family</item>
+        <item>@string/auto</item>
+        <item>@string/treatment</item>
+        <item>@string/salary</item>
+        <item>@string/other</item>
+    </string-array>
+
 </resources>

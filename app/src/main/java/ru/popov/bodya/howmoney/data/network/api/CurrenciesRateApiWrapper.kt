@@ -5,9 +5,6 @@ import ru.popov.bodya.howmoney.BuildConfig
 import ru.popov.bodya.howmoney.data.network.beans.CurrentRateBean
 import ru.popov.bodya.howmoney.domain.wallet.models.Currency
 
-/**
- * @author popovbodya
- */
 class CurrenciesRateApiWrapper(private val currenciesRateApi: CurrenciesRateApi) {
 
     companion object {
@@ -18,14 +15,15 @@ class CurrenciesRateApiWrapper(private val currenciesRateApi: CurrenciesRateApi)
         const val BASE_AMOUNT = "1"
     }
 
-    fun getCurrentRate(): Single<CurrentRateBean> = currenciesRateApi.getCurrentRate(buildQueryMap())
+    fun getCurrentRate(fromCurrency: Currency, toCurrency: Currency): Single<CurrentRateBean>
+            = currenciesRateApi.getCurrentRate(buildQueryMapForExchangeRate(fromCurrency, toCurrency))
 
 
-    private fun buildQueryMap(): Map<String, String> {
+    private fun buildQueryMapForExchangeRate(fromCurrency: Currency, toCurrency: Currency): Map<String, String> {
         return hashMapOf(
                 API_KEY to BuildConfig.FIXER_API_KEY,
-                FROM_CURRENCY_KEY to Currency.USD.stringValue,
-                TO_CURRENCY_KEY to Currency.RUB.stringValue,
+                FROM_CURRENCY_KEY to fromCurrency.toString(),
+                TO_CURRENCY_KEY to toCurrency.toString(),
                 DEFAULT_AMOUNT_KEY to BASE_AMOUNT
         )
     }

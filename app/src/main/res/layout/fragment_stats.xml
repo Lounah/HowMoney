@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/information_app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/information_toolbar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            app:contentScrim="@color/colorPrimary"
+            app:expandedTitleMarginEnd="64dp"
+            app:expandedTitleMarginStart="48dp"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:id="@+id/ll_currencies"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <org.fabiomsr.moneytextview.MoneyTextView
+                        android:id="@+id/tv_usd_amount"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_vertical|end"
+                        android:layout_margin="8dp"
+                        android:layout_weight="1"
+                        android:padding="8dp"
+                        app:amount="0"
+                        app:baseTextColor="@color/white"
+                        app:decimalGravity="top"
+                        app:decimalSeparator="."
+                        app:gravity="bottom"
+                        app:symbol="@string/dollar_sign" />
+
+
+                    <org.fabiomsr.moneytextview.MoneyTextView
+                        android:id="@+id/tv_eur_amount"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_vertical|start"
+                        android:layout_margin="8dp"
+                        android:layout_weight="1"
+                        android:padding="8dp"
+                        app:amount="0"
+                        app:baseTextColor="@color/white"
+                        app:decimalGravity="top"
+                        app:decimalSeparator="."
+                        app:gravity="bottom"
+                        app:symbol="@string/euro_sign" />
+                </LinearLayout>
+
+
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/vp_amount"
+                    android:layout_width="match_parent"
+                    android:layout_height="130dp"
+                    android:layout_below="@id/ll_currencies"
+                    android:background="@color/colorPrimary"
+                    android:clipToPadding="true" />
+
+                <LinearLayout
+                    android:id="@+id/ll_stats"
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:layout_below="@id/tl_dots"
+                    android:background="@color/white"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+
+                        <TextView
+                            style="@style/TextStyle.Small"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="top"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginTop="10dp"
+                            android:text="@string/incomes"
+                            android:textAlignment="center"
+                            android:textAllCaps="true"
+                            android:textColor="@color/colorIncome" />
+
+                        <org.fabiomsr.moneytextview.MoneyTextView
+                            android:id="@+id/tv_incomes"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="8dp"
+                            android:padding="8dp"
+                            android:textAlignment="center"
+                            app:amount="0"
+                            app:decimalGravity="top"
+                            app:decimalSeparator="."
+                            app:gravity="bottom"
+                            app:symbol="" />
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="end"
+                            android:background="@color/greyLight" />
+
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+
+                        <TextView
+                            style="@style/TextStyle.Small"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="top"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginTop="10dp"
+                            android:text="@string/expenses"
+                            android:textAlignment="center"
+                            android:textAllCaps="true"
+                            android:textColor="@color/colorExpense" />
+
+                        <org.fabiomsr.moneytextview.MoneyTextView
+                            android:id="@+id/tv_expenses"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:layout_margin="8dp"
+                            android:padding="8dp"
+                            android:textAlignment="center"
+                            app:amount="0"
+                            app:decimalGravity="top"
+                            app:decimalSeparator="."
+                            app:gravity="bottom"
+                            app:symbol="" />
+
+                    </FrameLayout>
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@id/ll_stats"
+                    android:background="@color/greyLight" />
+
+                <android.support.design.widget.TabLayout
+                    android:id="@+id/tl_dots"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_below="@id/vp_amount"
+                    android:background="@color/colorPrimary"
+                    app:tabBackground="@drawable/tab_selector"
+                    app:tabGravity="center"
+                    app:tabIndicatorHeight="0dp" />
+            </RelativeLayout>
+        </android.support.design.widget.CollapsingToolbarLayout>
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_stats"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/greyWarm"
+        android:clipToPadding="false"
+        android:visibility="visible"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:stackFromEnd="false"
+        tools:listitem="@layout/item_category_statistics" />
+</android.support.design.widget.CoordinatorLayout>

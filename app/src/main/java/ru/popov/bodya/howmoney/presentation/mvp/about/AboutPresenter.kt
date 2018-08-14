@@ -4,8 +4,8 @@ import android.content.pm.PackageManager
 import com.arellomobile.mvp.InjectViewState
 import ru.popov.bodya.core.mvp.AppPresenter
 import ru.popov.bodya.core.resources.ResourceManager
+import ru.popov.bodya.howmoney.BuildConfig
 import ru.popov.bodya.howmoney.R
-import ru.popov.bodya.howmoney.presentation.ui.common.Screens.WRITE_EMAIL_SCREEN
 import ru.terrakok.cicerone.Router
 import javax.inject.Inject
 
@@ -28,14 +28,6 @@ class AboutPresenter @Inject constructor(
         router.exit()
     }
 
-    fun onEmailClick() {
-        router.navigateTo(WRITE_EMAIL_SCREEN, resourceManager.getString(R.string.email))
-    }
-
-    private fun getAppVersion(): String = try {
-        resourceManager.packageManager.getPackageInfo(resourceManager.packageName, 0).versionName
-    } catch (e: PackageManager.NameNotFoundException) {
-        e.printStackTrace()
-        resourceManager.getString(R.string.about_default_version_code)
-    }
+    private fun getAppVersion(): String =
+            resourceManager.getString(R.string.version_code, BuildConfig.VERSION_NAME)
 }
